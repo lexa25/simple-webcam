@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Простая веб-камера</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #111;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 20px;
+    }
+    h1 { font-size: 1.5rem; opacity: 0.8; }
+    #video {
+      width: 100%;
+      max-width: 720px;
+      border-radius: 12px;
+      background: #222;
+      transform: scaleX(-1); /* зеркало */
+    }
+    button {
+      padding: 12px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #0a84ff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover { background: #0070e0; }
+    button:disabled { background: #444; cursor: not-allowed; }
+    #status { font-size: 0.9rem; opacity: 0.7; }
+  </style>
+</head>
+<body>
+  <h1>Веб-камера</h1>
+  <video id="video" autoplay playsinline></video>
+  <button id="startBtn">Включить камеру</button>
+  <div id="status">Нажми кнопку, чтобы включить</div>
+
+  <script>
+    const video = document.getElementById('video');
+    const startBtn = document.getElementById('startBtn');
+    const status = document.getElementById('status');
+
+    startBtn.onclick = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user' },
+          audio: false
+        });
+        video.srcObject = stream;
+        startBtn.disabled = true;
+        startBtn.textContent = 'Камера включена';
+        status.textContent = 'Работает';
+      } catch (err) {
+        status.textContent = 'Ошибка: ' + err.message;
+        console.error(err);
+      }
+    };
+  </script>
+</body>
+</html>
